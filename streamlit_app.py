@@ -21,16 +21,11 @@ model = load_model(MODEL_PATH)
 st.caption(f"Modelo cargado: {MODEL_PATH}")
 
 # -------------------------------------------------
-# Configuración en barra lateral
+# Configuración en barra lateral (sin imgsz)
 # -------------------------------------------------
 with st.sidebar:
     st.subheader("Parámetros de inferencia")
     conf = st.slider("Confianza mínima", 0.1, 0.9, 0.25, 0.05)
-    imgsz = st.selectbox(
-        "Tamaño de imagen (modelo)",
-        [320, 416, 512, 640, 768, 960],
-        index=3
-    )
 
 # -------------------------------------------------
 # Fuente de la imagen: banco o subida
@@ -97,7 +92,8 @@ if img is not None:
     st.image(img, use_container_width=True)
 
     if st.button("Detectar"):
-        results = model.predict(img, conf=conf, imgsz=imgsz)
+        # SIN imgsz: el tamaño de inferencia lo gestiona el modelo por defecto
+        results = model.predict(img, conf=conf)
         res = results[0]
 
         annotated_bgr = res.plot()
